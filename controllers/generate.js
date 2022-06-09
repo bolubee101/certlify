@@ -231,9 +231,11 @@ let sendCertificateNotice = (req, res) => {
       User.findOne({ email: cert.issuer }, (err, user) => {
         for (i in cert.eligibleUsers) {
           let email = cert.eligibleUsers[i].email
+          console.log(cert.eligibleUsers)
           if (cert.eligibleUsers.name && cert.eligibleUsers.name !== "") {
             jwt.sign({ email, link }, secret, function (err, token) {
               //console.log("token generatex for", email);
+              console.log(token)
               let mailOptions = {
                 from: "info@certlify.com", // sender address
                 to: email, // list of receivers
