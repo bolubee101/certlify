@@ -248,7 +248,7 @@ let sendCertificateNotice = (req, res) => {
         res.status(200);
         return res.json({
           status: true,
-          message: "Notification emails sent successfully",
+          message: "Sorry, no frontend yet, but I assure you, the notification emails have been sent successfully to the eligible parties",
         });
       })
     } else {
