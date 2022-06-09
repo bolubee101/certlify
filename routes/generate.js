@@ -9,4 +9,5 @@ router.get("/name",generate.name);
 router.post("/generate/:link",generate.emailverification);
 router.get("/details",generate.details);
 router.post("/certgenerate",generate.generate);
+router.get("/notice/:link", generate.sendCertificateNotice)
 module.exports=router;

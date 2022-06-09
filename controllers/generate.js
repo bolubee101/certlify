@@ -222,6 +222,44 @@ let emailverification = (req, res) => {
   });
 };
 
+let sendCertificateNotice = (req, res) => {
+  let link = req.params.link;
+  //console.log(email)
+  //console.log(link);
+  Link.findOne({ link: link }, (err, cert) => {
+    if (cert) {
+      User.findOne({ email: cert.issuer }, (err, user) => {
+        for (i in cert.eligibleUsers) {
+          let email = cert.eligibleUsers[i].email
+          if (cert.eligibleUsers.name && cert.eligibleUsers.name !== "") {
+            jwt.sign({ email, link }, secret, function (err, token) {
+              //console.log("token generatex for", email);
+              let mailOptions = {
+                from: "info@certlify.com", // sender address
+                to: email, // list of receivers
+                subject: "Your Certificate is Waiting!", // Subject line
+                html: generatormail(`http://${req.hostname}/certify/${token}`, user.name, cert.name)
+              };
+              mailer(mailOptions);
+            });
+          }
+        }
+        res.status(200);
+        return res.json({
+          status: true,
+          message: "Notification emails sent successfully",
+        });
+      })
+    } else {
+      res.status(404);
+      res.json({
+        status: false,
+        message: "invalid certificate link",
+      });
+    }
+  });
+};
+
 let generate = (req, res) => {
   let link = req.session.link;
   let email=req.session.generator;
@@ -286,3 +324,4 @@ module.exports.name = name;
 module.exports.emailverification = emailverification;
 module.exports.details = details;
 module.exports.generate = generate;
+module.exports.sendCertificateNotice = sendCertificateNotice;
